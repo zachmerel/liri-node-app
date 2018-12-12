@@ -22,7 +22,24 @@ const nodeArgs = process.argv;
 let userRequest = nodeArgs.splice(3).join("+");
 let methodToRun = process.argv[2];
 
-
+const switchStatement = () => {
+  switch (methodToRun) {
+    case "movie-this":
+      omdbRequest(userRequest);
+      break;
+    case "concert-this":
+      bandsInTownRequest(userRequest);
+      break;
+    case "spotify-this-song":
+      spotifyRequest(userRequest);
+      break;
+    case "do-what-it-says":
+      doWhatItSaysRequest(userRequest)
+      break;
+    default:
+      console.log("not supported")
+  }
+}
 
 const omdbRequest = (movieName) => {
   // Then run a request with axios to the OMDB API with the movie specified
@@ -90,33 +107,22 @@ const doWhatItSaysRequest = (requestName) => {
       let dataArr = data.split(",");
       methodToRun = dataArr[0];
       userRequest = dataArr[1];
-      switchStatment();
+      switchStatement();
   });
 }
+
+
 if (methodToRun === "movie-this" && userRequest === "") {
     userRequest = "Mr.Nobody";
     omdbRequest(userRequest);
   }
   else {
-    switchStatment();
+    switchStatement();
   }
 
-  function switchStatment () {
-    switch (methodToRun) {
-      case "movie-this":
-        omdbRequest(userRequest);
-        break;
-      case "concert-this":
-        bandsInTownRequest(userRequest);
-        break;
-      case "spotify-this-song":
-        spotifyRequest(userRequest);
-        break;
-      case "do-what-it-says":
-        doWhatItSaysRequest(userRequest)
-        break;
-      default:
-        console.log("not supported")
-    }
-  }
+
+
+  
+
+
 
