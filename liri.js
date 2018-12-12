@@ -1,6 +1,9 @@
 require("dotenv").config();
+// Core node package for reading and writing files
+const fs = require("fs");
+//node package to use APIs
 const axios = require("axios");
-
+//intializes the use of whats in the keys.js file
 const keys = require("./keys.js")
 
 //calls spotify json package to use their API
@@ -10,7 +13,7 @@ const spotify = new Spotify(keys.spotify);
 // stores Bands in Town api key
 // const BITAPI = new BITAPI(keys.bandsInTown);
 
-// const moment = require("moment");
+const moment = require("moment");
 
 // Store all of the arguments in an array
 const nodeArgs = process.argv;
@@ -49,7 +52,12 @@ const bandsInTownRequest = (artistName) => {
     function (response) {
       console.log(`Venue Name: ${response.data[1].venue.name}`);
       console.log(`Venue Location: ${response.data[1].venue.city}, ${response.data[1].venue.region} ${response.data[1].venue.country}`)
-      console.log(`Date of the Event: ${response.data[1].datetime}`) 
+      // var local = moment.utc(response.data[1].datetime).local().format();
+      // console.log(`Date of the Event: ${local}`) 
+      // console.log(`Date of the Event: ${response.data[1].datetime}`)
+      var date = new Date(response.data[1].datetime);
+      formatedDate = moment(date).format("MM-DD-YYYY");
+      console.log(`Date of the Event: ${formatedDate}`)
       // console.log(VenueData.required);
       // console.log(EventData.required.datetime)
       console.log("you are searching for a band")
@@ -66,30 +74,39 @@ const spotifyRequest = (songName) => {
       console.log("Artist: " + data.tracks.items[0].artists[0].name);
       console.log("Album: " + data.tracks.items[0].album.name);
       if (data.tracks.items[0].preview_url === null) {
-        ("Spotify Preview: Unavailable ")
+        console.log("Spotify Preview: Unavailable ")
       }
       else {
         console.log("Spotify Preview: " + data.tracks.items[0].preview_url);
       }
+      // console.log(data.tracks.items[0]);
     }
   });
 }
 const doWhatItSaysRequest = (requestName) => {
   console.log("you are looking what it says to do");
 }
-switch (methodToRun) {
-  case "movie-this":
-    omdbRequest(userRequest);
-    break;
-  case "concert-this":
-    bandsInTownRequest(userRequest);
-    break;
-  case "spotify-this-song":
-    spotifyRequest(userRequest);
-    break;
-  case "do-what-it-says":
-    doWhatItSaysRequest(userRequest)
-    break;
-  default:
-    console.log("not supported")
+
+if (methodToRun === "movie-this" && userRequest === "") {
+  userRequest = "Mr.Nobody";
+  omdbRequest(userRequest);
 }
+else {
+  switch (methodToRun) {
+    case "movie-this":
+      omdbRequest(userRequest);
+      break;
+    case "concert-this":
+      bandsInTownRequest(userRequest);
+      break;
+    case "spotify-this-song":
+      spotifyRequest(userRequest);
+      break;
+    case "do-what-it-says":
+      doWhatItSaysRequest(userRequest)
+      break;
+    default:
+      console.log("not supported")
+  }
+}
+
