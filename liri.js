@@ -1,5 +1,13 @@
-// require("dotenv").config();
+require("dotenv").config();
 const axios = require("axios");
+
+const keys = require("./keys.js")
+
+// stores spotify keys/secret
+const Spotify = require("node-spotify-api")
+
+const spotify = new Spotify(keys.spotify);
+
 // const moment = require("moment");
 
 // Store all of the arguments in an array
@@ -10,12 +18,8 @@ let userRequest = nodeArgs.splice(3).join("+");
 let methodToRun = process.argv[2];
 
 
-// stores spotify keys/secret
-// const spotify = new Spotify(keys.spotify);
+
 const omdbRequest = (movieName) => {
-
-
-  // console.log(movieName);
   // Then run a request with axios to the OMDB API with the movie specified
   let queryUrl = `http://www.omdbapi.com/?t=${movieName}&y=&plot=short&apikey=trilogy`;
   // This line is just to help us debug against the actual URL.
@@ -40,7 +44,23 @@ const bandsInTownRequest = (bandName) => {
   console.log("you are looking up a band");
 }
 const spotifyRequest = (songName) => {
-  console.log("you are looking up a song");
+  spotify.search({ type: 'track', query: songName, limit: 1 }, function (err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    }
+    else {
+      console.log("Song Title: " + data.tracks.items[0].name);
+      console.log("Artist: " + data.tracks.items[0].artists[0].name);
+      console.log("Album: " + data.tracks.items[0].album.name);
+      if (data.tracks.items[0].preview_url === null) {
+        ("Spotify Preview: Unavailable ")
+      }
+      else {
+        console.log("Spotify Preview: " + data.tracks.items[0].preview_url);
+      }
+    }
+  });
+  // console.log("you are looking up a song");
 }
 const doWhatItSaysRequest = (requestName) => {
   console.log("you are looking what it says to do");
@@ -58,7 +78,7 @@ switch (methodToRun) {
   case "do-what-it-says":
     doWhatItSaysRequest(userRequest)
     break;
-  default: 
+  default:
     console.log("not supported")
 }
 // const 
