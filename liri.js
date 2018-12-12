@@ -3,10 +3,12 @@ const axios = require("axios");
 
 const keys = require("./keys.js")
 
-// stores spotify keys/secret
+//calls spotify json package to use their API
 const Spotify = require("node-spotify-api")
-
+// stores spotify keys/secret
 const spotify = new Spotify(keys.spotify);
+// stores Bands in Town api key
+// const BITAPI = new BITAPI(keys.bandsInTown);
 
 // const moment = require("moment");
 
@@ -40,9 +42,20 @@ const omdbRequest = (movieName) => {
   )
 };
 
-const bandsInTownRequest = (bandName) => {
-  console.log("you are looking up a band");
-}
+const bandsInTownRequest = (artistName) => {
+  let queryUrl = "https://rest.bandsintown.com/artists/" + artistName + "/events?app_id=codingbootcamp";
+
+  axios.get(queryUrl).then(
+    function (response) {
+      console.log(`Venue Name: ${response.data[1].venue.name}`);
+      console.log(`Venue Location: ${response.data[1].venue.city}, ${response.data[1].venue.region} ${response.data[1].venue.country}`)
+      console.log(`Date of the Event: ${response.data[1].datetime}`) 
+      // console.log(VenueData.required);
+      // console.log(EventData.required.datetime)
+      console.log("you are searching for a band")
+    }
+  )
+};
 const spotifyRequest = (songName) => {
   spotify.search({ type: 'track', query: songName, limit: 1 }, function (err, data) {
     if (err) {
@@ -60,7 +73,6 @@ const spotifyRequest = (songName) => {
       }
     }
   });
-  // console.log("you are looking up a song");
 }
 const doWhatItSaysRequest = (requestName) => {
   console.log("you are looking what it says to do");
@@ -81,4 +93,3 @@ switch (methodToRun) {
   default:
     console.log("not supported")
 }
-// const 
