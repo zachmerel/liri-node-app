@@ -79,34 +79,44 @@ const spotifyRequest = (songName) => {
       else {
         console.log("Spotify Preview: " + data.tracks.items[0].preview_url);
       }
-      // console.log(data.tracks.items[0]);
     }
   });
 }
 const doWhatItSaysRequest = (requestName) => {
-  console.log("you are looking what it says to do");
+  fs.readFile("random.txt", "utf8", function (error, data) {
+    if (error) {
+      return console.log(error);
+    }
+      let dataArr = data.split(",");
+      methodToRun = dataArr[0];
+      userRequest = dataArr[1];
+      switchStatment();
+  });
 }
-
 if (methodToRun === "movie-this" && userRequest === "") {
-  userRequest = "Mr.Nobody";
-  omdbRequest(userRequest);
-}
-else {
-  switch (methodToRun) {
-    case "movie-this":
-      omdbRequest(userRequest);
-      break;
-    case "concert-this":
-      bandsInTownRequest(userRequest);
-      break;
-    case "spotify-this-song":
-      spotifyRequest(userRequest);
-      break;
-    case "do-what-it-says":
-      doWhatItSaysRequest(userRequest)
-      break;
-    default:
-      console.log("not supported")
+    userRequest = "Mr.Nobody";
+    omdbRequest(userRequest);
   }
-}
+  else {
+    switchStatment();
+  }
+
+  function switchStatment () {
+    switch (methodToRun) {
+      case "movie-this":
+        omdbRequest(userRequest);
+        break;
+      case "concert-this":
+        bandsInTownRequest(userRequest);
+        break;
+      case "spotify-this-song":
+        spotifyRequest(userRequest);
+        break;
+      case "do-what-it-says":
+        doWhatItSaysRequest(userRequest)
+        break;
+      default:
+        console.log("not supported")
+    }
+  }
 
