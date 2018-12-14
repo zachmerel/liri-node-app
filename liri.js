@@ -21,7 +21,7 @@ const nodeArgs = process.argv;
 // Create an empty variable for holding the movie name
 let userRequest = nodeArgs.splice(3).join("+");
 let methodToRun = process.argv[2];
-
+//Switch statement hold logic and calls functions based on user input
 const switchStatement = () => {
   switch (methodToRun) {
     case "movie-this":
@@ -40,12 +40,10 @@ const switchStatement = () => {
       console.log("not supported")
   }
 }
-
+//omdb function
 const omdbRequest = (movieName) => {
-  // Then run a request with axios to the OMDB API with the movie specified
+
   let queryUrl = `http://www.omdbapi.com/?t=${movieName}&y=&plot=short&apikey=trilogy`;
-  // This line is just to help us debug against the actual URL.
-  // console.log(queryUrl);
 
   axios.get(queryUrl).then(
     function (response) {
@@ -61,7 +59,7 @@ const omdbRequest = (movieName) => {
 
   )
 };
-
+//bands in town function
 const bandsInTownRequest = (artistName) => {
   let queryUrl = "https://rest.bandsintown.com/artists/" + artistName + "/events?app_id=codingbootcamp";
 
@@ -69,18 +67,13 @@ const bandsInTownRequest = (artistName) => {
     function (response) {
       console.log(`Venue Name: ${response.data[1].venue.name}`);
       console.log(`Venue Location: ${response.data[1].venue.city}, ${response.data[1].venue.region} ${response.data[1].venue.country}`)
-      // var local = moment.utc(response.data[1].datetime).local().format();
-      // console.log(`Date of the Event: ${local}`) 
-      // console.log(`Date of the Event: ${response.data[1].datetime}`)
       var date = new Date(response.data[1].datetime);
       formatedDate = moment(date).format("MM-DD-YYYY");
       console.log(`Date of the Event: ${formatedDate}`)
-      // console.log(VenueData.required);
-      // console.log(EventData.required.datetime)
-      console.log("you are searching for a band")
     }
   )
 };
+//spotify function
 const spotifyRequest = (songName) => {
   spotify.search({ type: 'track', query: songName, limit: 1 }, function (err, data) {
     if (err) {
@@ -99,30 +92,32 @@ const spotifyRequest = (songName) => {
     }
   });
 }
+//do what it says function, reads from the random.txt file
 const doWhatItSaysRequest = (requestName) => {
   fs.readFile("random.txt", "utf8", function (error, data) {
     if (error) {
       return console.log(error);
     }
-      let dataArr = data.split(",");
-      methodToRun = dataArr[0];
-      userRequest = dataArr[1];
-      switchStatement();
+    let dataArr = data.split(",");
+    methodToRun = dataArr[0];
+    userRequest = dataArr[1];
+    switchStatement();
   });
 }
-
-
+//if statement to default if no user request entered for movie-this
 if (methodToRun === "movie-this" && userRequest === "") {
-    userRequest = "Mr.Nobody";
-    omdbRequest(userRequest);
-  }
-  else {
-    switchStatement();
-  }
+  userRequest = "Mr.Nobody";
+  omdbRequest(userRequest);
+}
+if (methodToRun === "spotify-this-song" && userRequest === "") {
+  userRequest = "Ace of Base";
+  spotifyRequest(userRequest);
+} 
 
 
 
-  
+
+
 
 
 
