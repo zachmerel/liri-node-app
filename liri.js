@@ -109,15 +109,10 @@ if (methodToRun === "movie-this" && userRequest === "") {
   userRequest = "Mr.Nobody";
   omdbRequest(userRequest);
 }
-if (methodToRun === "spotify-this-song" && userRequest === "") {
+else if (methodToRun === "spotify-this-song" && userRequest === "") {
   userRequest = "Ace of Base";
   spotifyRequest(userRequest);
 } 
-
-
-
-
-
-
-
-
+else{
+  switchStatement();
+}
